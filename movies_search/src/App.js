@@ -7,11 +7,11 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {}
-    this.performSearch("avengers")
+    this.performSearch("Avengers")
   }
 
   performSearch(searchTerm){
-    console.log("Performing search using moviedb")
+    console.log("Performing moviedb search...")
     const urlString = "https://api.themoviedb.org/3/search/movie?&api_key=53795b69c777addc425c4a279bd3d4f5&query=" + searchTerm
     $.ajax({
       url: urlString,
@@ -48,9 +48,9 @@ class App extends Component {
               <td>
                 <img alt="app icon" width="50" src="green_app_icon.svg"/>
               </td>
-              <td width="8"></td>
+              <td width="8"/>
               <td>
-                <h1>MoviesDB Search</h1>
+                <h1>Movies Search</h1>
               </td>
             </tr>
           </tbody>
@@ -63,7 +63,7 @@ class App extends Component {
           paddingTop: 8,
           paddingBottom: 8,
           paddingLeft: 16
-        }} onChange={this.searchChangeHandler.bind(this)} placeholder="Enter search term"/>
+        }} onChange={this.searchChangeHandler.bind(this)} placeholder="Enter a movie"/>
 
         {this.state.rows}
 
