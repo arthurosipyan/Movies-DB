@@ -1,25 +1,41 @@
 import React, { Component } from 'react';
 import './App.css';
-import MovieRow from './movieRow'
+import MovieRow from './MovieRow.js'
+import $ from 'jquery'
 
 class App extends Component {
   constructor(props) {
     super(props)
+    this.state = {}
+    this.performSearch("avengers")
+  }
 
-    const movies = [
-      {id: 0, poster_src: "https://s3.amazonaws.com/rical-misc/USATSI_12737579.jpg", title: "Avengers: Infinity War", overview: "As asdasdfasd wv asdaw dawd"},
-      {id: 1, poster_src: "https://s3.amazonaws.com/rical-images/ronald-acuna-800x480.jpg", title: "The Avengers", overview: "Sciondasdasd g232313dadahfddd"}
-    ]
-
-    var movieRows = []
-    movies.forEach((movie) => {
-      console.log(movie.title)
-      const movieRow = <MovieRow movie={movie} />
-      movieRows.push(movieRow)
+  performSearch(searchTerm){
+    console.log("Performing search using moviedb")
+    const urlString = "https://api.themoviedb.org/3/search/movie?&api_key=53795b69c777addc425c4a279bd3d4f5&query=" + searchTerm
+    $.ajax({
+      url: urlString,
+      success: (searchResults) => {
+        console.log("Fetched data successfully")
+        const results = searchResults.results
+        var movieRows = []
+        results.forEach((movie) => {
+          movie.poster_src = "https://image.tmdb.org/t/p/w185" + movie.poster_path
+          const movieRow = <MovieRow key={movie.id} movie={movie}/>
+          movieRows.push(movieRow)
+        })
+        this.setState({rows: movieRows})
+      },
+      error: (xhr, status, err) => {
+        console.log("Failed to fetch data")
+      }
     })
+  }
 
-    this.state = {rows: movieRows}
-
+  searchChangeHandler(event) {
+    const boundObject = this
+    const searchTerm = event.target.value
+    boundObject.performSearch(searchTerm)
   }
 
   render() {
@@ -47,7 +63,7 @@ class App extends Component {
           paddingTop: 8,
           paddingBottom: 8,
           paddingLeft: 16
-        }} placeholder="Enter search term"/>
+        }} onChange={this.searchChangeHandler.bind(this)} placeholder="Enter search term"/>
 
         {this.state.rows}
 
